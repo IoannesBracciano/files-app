@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { TreeNodeComponent } from "./tree-view/tree-node.component";
 import { TreeViewComponent } from './tree-view/tree-view.component';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { StoreModule } from '@ngrx/store';
         strictStateImmutability: true,
         strictActionImmutability: true
       }
-    })
+    }),
+    EffectsModule.forRoot([])
   ],
   providers: [],
   bootstrap: [AppComponent]
