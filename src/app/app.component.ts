@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Node } from './models/node';
 import * as FsActions from './store/fs.actions';
 import { FsState } from './store/fs.reducer';
-import { selectAllNodes } from './store/fs.selectors';
+import { selectPath } from './store/fs.selectors';
 
 @Component({
   selector: 'files-root',
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
   constructor(private store: Store<{ fs: FsState }>) { }
 
   ngOnInit() {
-    this.nodes$ = this.store.pipe(select(selectAllNodes));
+    this.nodes$ = this.store.pipe(select(selectPath, { path: '/' }));
     this.store.dispatch(FsActions.LIST_DIRECTORY_CONTENTS({ path: '/' }));
   }
 

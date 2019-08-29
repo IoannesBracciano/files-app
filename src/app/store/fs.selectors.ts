@@ -7,3 +7,8 @@ export const selectAllNodes = createSelector(
   selectFs,
   (fsState) => fsState.nodes
 );
+
+export const selectPath = createSelector(
+  selectFs,
+  (fsState, { path }) => fsState.nodes[path]
+)
