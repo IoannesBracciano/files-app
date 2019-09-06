@@ -11,4 +11,9 @@ export const selectAllNodes = createSelector(
 export const selectPath = createSelector(
   selectFs,
   (fsState, { path }) => fsState.nodes[path]
-)
+);
+
+export const selectRoot = createSelector(
+  selectFs,
+  (fsState) => fsState.root
+);

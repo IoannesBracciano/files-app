@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { Node } from '../models/node';
 import * as FsActions from '../store/fs.actions';
 import { FsState } from '../store/fs.reducer';
+import { selectPath } from '../store/fs.selectors';
+
 
 @Component({
   selector: 'files-tree-node',
@@ -15,8 +18,10 @@ import { FsState } from '../store/fs.reducer';
       <div class="tree-node-handle" (click)="onClick()">
         <span class="node-name">{{node.name}}</span>
       </div>
-      <files-tree-view *ngIf="node && expanded" [path]="node.uri">
-      </files-tree-view>
+      <div class="tree-node-nested" *ngIf="expanded">
+        <files-tree-node *ngFor="let child of children$ | async" [node]="child">
+        </files-tree-node>
+      </div>
     </div>
   `,
   styles: [`
@@ -76,11 +81,14 @@ export class TreeNodeComponent implements OnInit {
   @Input()
   public node: Node;
 
+  public children$: Observable<Node[]>;
+
   public expanded = false;
 
   constructor(private store: Store<{ fs: FsState }>) { }
 
   ngOnInit() {
+    this.children$ = this.store.pipe(select(selectPath, { path: this.node.uri }));
   }
 
   public onClick() {
