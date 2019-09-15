@@ -1,10 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Node } from '../models/node';
-import * as FsActions from '../store/fs.actions';
-import { FsState } from '../store/fs.reducer';
-import { selectPath } from '../store/fs.selectors';
 
 
 @Component({
@@ -19,7 +14,10 @@ import { selectPath } from '../store/fs.selectors';
         <span class="node-name">{{node.name}}</span>
       </div>
       <div class="tree-node-nested" *ngIf="expanded">
-        <files-tree-node *ngFor="let child of children$ | async" [node]="child">
+        <files-tree-node *ngFor="let child of tree[node?.uri]"
+          [node]="child"
+          [tree]="tree"
+          (expand)="expand.emit($event)">
         </files-tree-node>
       </div>
     </div>
@@ -76,25 +74,23 @@ import { selectPath } from '../store/fs.selectors';
     }
   `]
 })
-export class TreeNodeComponent implements OnInit {
+export class TreeNodeComponent {
 
   @Input()
   public node: Node;
 
-  public children$: Observable<Node[]>;
+  @Input()
+  public tree: { [paths: string]: Node[] };
+
+  @Output()
+  public expand = new EventEmitter<Node>();
 
   public expanded = false;
-
-  constructor(private store: Store<{ fs: FsState }>) { }
-
-  ngOnInit() {
-    this.children$ = this.store.pipe(select(selectPath, { path: this.node.uri }));
-  }
 
   public onClick() {
     if (this.node.type === 'dir') {
       this.expanded = !this.expanded;
-      this.store.dispatch(FsActions.LIST_DIRECTORY_CONTENTS({ path: this.node.uri }));
+      this.expanded && this.expand.emit(this.node);
     }
   }
 

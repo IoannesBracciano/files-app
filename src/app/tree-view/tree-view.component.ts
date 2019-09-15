@@ -1,26 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Node } from '../models/node';
-import { FsState } from '../store/fs.reducer';
-import { selectRoot } from '../store/fs.selectors';
 
 @Component({
   selector: 'files-tree-view',
   template: `
-    <files-tree-node [node]="root$ | async">
+    <files-tree-node
+      [node]="root"
+      [tree]="tree"
+      (expand)="nodeExpand.emit($event)">
     </files-tree-node>
   `,
   styles: []
 })
-export class TreeViewComponent implements OnInit {
+export class TreeViewComponent {
 
-  public root$: Observable<Node>;
+  @Input()
+  public root: Node;
 
-  constructor(private store: Store<{ fs: FsState }>) { }
+  @Input()
+  public tree: { [path: string]: Node[] };
 
-  ngOnInit() {
-    this.root$ = this.store.pipe(select(selectRoot));
-  }
+  @Output()
+  public nodeExpand = new EventEmitter<Node>();
 
 }
