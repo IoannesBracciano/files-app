@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Node } from '../models/node';
-
+import { TreeViewService } from './tree-view.service';
 
 @Component({
   selector: 'files-tree-node',
@@ -16,8 +16,7 @@ import { Node } from '../models/node';
       <div class="tree-node-nested" *ngIf="expanded">
         <files-tree-node *ngFor="let child of tree[node?.uri]"
           [node]="child"
-          [tree]="tree"
-          (expand)="expand.emit($event)">
+          [tree]="tree">
         </files-tree-node>
       </div>
     </div>
@@ -82,15 +81,14 @@ export class TreeNodeComponent {
   @Input()
   public tree: { [paths: string]: Node[] };
 
-  @Output()
-  public expand = new EventEmitter<Node>();
-
   public expanded = false;
+
+  constructor(private treeViewService: TreeViewService) { }
 
   public onClick() {
     if (this.node.type === 'dir') {
       this.expanded = !this.expanded;
-      this.expanded && this.expand.emit(this.node);
+      this.expanded && this.treeViewService.emitNodeExpand(this.node);
     }
   }
 

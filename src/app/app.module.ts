@@ -6,14 +6,11 @@ import { StoreModule } from '@ngrx/store';
 import { AppComponent } from './app.component';
 import { FsEffects } from './store/fs.effects';
 import * as Fs from './store/fs.reducer';
-import { TreeNodeComponent } from './tree-view/tree-node.component';
-import { TreeViewComponent } from './tree-view/tree-view.component';
+import { TreeViewModule } from './tree-view/tree-view.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TreeNodeComponent,
-    TreeViewComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +21,8 @@ import { TreeViewComponent } from './tree-view/tree-view.component';
         strictStateImmutability: true,
         strictActionImmutability: true
       }
-    })
+    }),
+    TreeViewModule
   ],
   providers: [],
   bootstrap: [AppComponent]
