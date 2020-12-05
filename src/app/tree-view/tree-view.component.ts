@@ -1,28 +1,28 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Node } from '../models/node';
 import { TreeViewService } from './tree-view.service';
+import { FlatTreeStruct, TreeNode } from './typings';
 
 @Component({
-  selector: 'files-tree-view',
+  selector: 'tree-view',
   template: `
-    <files-tree-node
+    <tree-node
       [node]="root"
       [tree]="tree">
-    </files-tree-node>
+    </tree-node>
   `,
   styles: []
 })
 export class TreeViewComponent implements OnDestroy, OnInit {
 
   @Input()
-  public root: Node;
+  public root: TreeNode;
 
   @Input()
-  public tree: { [path: string]: Node[] };
+  public tree: FlatTreeStruct;
 
   @Output()
-  public nodeExpand = new EventEmitter<Node>();
+  public nodeExpand = new EventEmitter<TreeNode>();
 
   private expandSubscription: Subscription;
 

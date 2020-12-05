@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Node } from '../models/node';
+import { TreeNode } from './typings';
 
 @Injectable()
 export class TreeViewService {
 
-    private expandSubject = new Subject<Node>();
+    private expandSubject = new Subject<TreeNode>();
 
     public readonly expand$ = this.expandSubject.asObservable();
 
-    public emitNodeExpand(node: Node) {
+    public emitNodeExpand(node: TreeNode) {
         this.expandSubject.next(node);
     }
 
